@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    //TODO: check if Autowired necessary
+
     private UserRepository userRepository;
 
     public CustomUserDetailsService(UserRepository userRepository) {

@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -33,21 +35,30 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public void saveUser(UserDto userDto) {
-        User user = new User();
-        user.setName(userDto.getFirstName() + " " + userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-        // encrypt the password using spring security
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+        User user= initializeUserWithUserDto(userDto);
 
         Optional<Role> optional = Optional.ofNullable(roleRepository.findByName("ROLE_ADMIN"));
         Role role= null;
+
         if(!optional.isPresent()){
             role = checkRoleExist();
         }
         user.setRoles(Arrays.asList(role));
         userRepository.save(user);
     }
+
+    private User initializeUserWithUserDto(UserDto userDto) {
+        User user = new User();
+        user.setName(userDto.getFirstName() + " " + userDto.getLastName());
+        user.setEmail(userDto.getEmail());
+        // encrypt the password using spring security
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        return user;
+    }
+
 
     @Override
     public User findUserByEmail(String email) {
