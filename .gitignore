@@ -1,3 +1,4 @@
+application.properties
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -33,4 +34,4 @@ build/
 .vscode/
 /mvnw
 /mvnw.cmd
-/src/main/resources/application.properties
+
